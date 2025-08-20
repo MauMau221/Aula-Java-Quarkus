@@ -1,10 +1,7 @@
 package org.senac;
 
 import jakarta.transaction.Transactional;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
 
 @Path("/books")
@@ -16,7 +13,7 @@ public class BookResource {
     }
 
     @GET
-    @Path("{id}")
+    @Path("/{id}")
     public Response getById(@PathParam("id") int id) {
         Book entity = Book.findById(id);
         if(entity == null){
@@ -30,5 +27,13 @@ public class BookResource {
     public Response insert(Book book) {
         Book.persist(book); //insere novo livro
         return Response.status(201).entity(book).build();
+    }
+
+    @DELETE
+    @Path("/{id}")
+    @Transactional
+    public Response delete(@PathParam("id") int id) {
+        Book.deleteById(id);
+        return Response.noContent().build();
     }
 }
