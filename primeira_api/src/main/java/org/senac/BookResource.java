@@ -36,4 +36,22 @@ public class BookResource {
         Book.deleteById(id);
         return Response.noContent().build();
     }
+
+    @PUT
+    @Path("/{id}")
+    @Transactional
+    public Response update(@PathParam("id") int id, Book newbook) {
+        Book  entity = Book.findById(id);
+        if(entity == null){
+            return Response.status(404).build();
+        }
+        entity.titulo = newbook.titulo;
+        entity.autor = newbook.autor;
+        entity.editora = newbook.editora;
+        entity.anoLancamento = newbook.anoLancamento;
+        entity.estaDisponivel = newbook.estaDisponivel;
+
+        return Response.status(200).entity(entity).build();
+
+    }
 }
