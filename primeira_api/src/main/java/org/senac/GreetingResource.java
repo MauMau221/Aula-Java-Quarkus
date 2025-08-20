@@ -3,6 +3,7 @@ package org.senac;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 import java.awt.*;
 import java.util.List;
@@ -32,7 +33,7 @@ public class GreetingResource {
     }
 
     @POST
-    @Transactional
+    @Transactional // Serve para indicar que será feito alguma operação relacinada ao banco de dados
     @Consumes(MediaType.APPLICATION_JSON)
     public void insertEntity(MyEntity entity){
         MyEntity.persist(entity);
@@ -40,8 +41,20 @@ public class GreetingResource {
 
     @DELETE
     @Path("{id}")
-    @Transactional
+    @Transactional // Serve para indicar que será feito alguma operação relacinada ao banco de dados
     public void delete(@PathParam("id") int id){
         MyEntity.deleteById(id);
+    }
+
+    @PUT
+    @Path("{id}")
+    @Transactional // Serve para indicar que será feito alguma operação relacinada ao banco de dados
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updateEntity(MyEntity entity, @PathParam("id") int id) {
+        MyEntity entity1 = MyEntity.findById(id);
+        if(entity1 == null){
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        return Response.ok(entity1).build();
     }
 }
