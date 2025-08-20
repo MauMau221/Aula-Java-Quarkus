@@ -4,6 +4,8 @@ import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
 
+import java.util.ArrayList;
+
 @Path("/books")
 public class BookResource {
 
@@ -20,6 +22,15 @@ public class BookResource {
             return Response.status(404).build();
         }
         return Response.ok(entity).build();
+    }
+
+    @GET
+    @Path("/search")
+    public Response search(@QueryParam("title") String title, //Pesquisa
+                           @QueryParam("sort") String sort, // ordenação
+                           @QueryParam("direction") String direction){
+        var books = Book.find("titulo = ?1", title);
+        return Response.ok(books).build();
     }
 
     @POST
